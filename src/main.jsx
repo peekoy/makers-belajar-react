@@ -1,7 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from 'react-router-dom';
 import LoginPage from './pages/login.jsx';
 import RegisterPage from './pages/register.jsx';
 import ErrorPage from './pages/404.jsx';
@@ -10,8 +14,8 @@ import ProductsPage from './pages/products.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <div>Hello World</div>,
-    errorElement: <ErrorPage />,
+    element: <Navigate to='/login' replace />,
+    errorElement: <Navigate to='/404' replace />,
   },
   {
     path: '/login',
@@ -24,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: '/products',
     element: <ProductsPage />,
+  },
+  {
+    path: '/404',
+    element: <ErrorPage />,
   },
 ]);
 
