@@ -1,27 +1,22 @@
 import Button from '../components/Elements/Button';
 import CardProduct from '../components/Fragments/CardProduct';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { getProducts } from '../services/product.service';
-import { getUsername } from '../services/auth.service';
+import { AuthContext } from '../contexts/AuthContext';
+import { CartContext } from '../contexts/cartContext';
 
 const ProductsPage = () => {
-  const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
-  const [username, setUsername] = useState('');
+  const { user, logout, isLoggedIn } = useContext(AuthContext);
+  const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
+    useContext(CartContext);
 
   useEffect(() => {
-    setCart(JSON.parse(localStorage.getItem('cart')) || []);
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setUsername(getUsername(token));
-    } else {
+    if (!isLoggedIn) {
       window.location.href = '/login';
     }
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     getProducts((data) => {
@@ -41,59 +36,7 @@ const ProductsPage = () => {
   }, [cart, products]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
-  };
-
-  const handleAddToCart = (id) => {
-    if (cart.find((item) => item.id === id)) {
-      setCart(
-        cart.map((item) =>
-          item.id === id ? { ...item, qty: item.qty + 1 } : item
-        )
-      );
-    } else {
-      setCart([
-        ...cart,
-        {
-          id,
-          qty: 1,
-        },
-      ]);
-    }
-  };
-
-  const handleDeleteSingleCart = (id) => {
-    const found = cart.find((item) => item.id === id);
-
-    if (found && found.qty > 1) {
-      setCart(
-        cart.map((item) =>
-          item.id === id ? { ...item, qty: item.qty - 1 } : item
-        )
-      );
-    } else {
-      const updatedCart = cart.filter((item) => item.id !== id);
-      if (updatedCart.length > 0) {
-        setCart(updatedCart);
-      } else {
-        localStorage.removeItem('cart');
-        setCart([]);
-      }
-    }
-  };
-
-  const handleDeleteAllCart = () => {
-    localStorage.removeItem('cart');
-    setCart([]);
-  };
-
-  // useRef
-  const cartRef = useRef(JSON.parse(localStorage.getItem('cart')) || []);
-
-  const handleAddToCartRef = (id) => {
-    cartRef.current = [...cartRef.current, { id, qty: 1 }];
-    localStorage.setItem('cart', JSON.stringify(cart.current));
+    logout();
   };
 
   const totalPriceRef = useRef(null);
@@ -109,7 +52,7 @@ const ProductsPage = () => {
   return (
     <>
       <div className='flex justify-end h-20 bg-blue-600 text-white items-center px-10'>
-        {username}
+        {user?.username}
         <Button classname='ml-5 bg-black' onClick={handleLogout}>
           Logout
         </Button>
@@ -126,7 +69,7 @@ const ProductsPage = () => {
                 <CardProduct.Footer
                   price={product.price}
                   id={product.id}
-                  handleAddToCart={handleAddToCart}
+                  handleAddToCart={() => handleAddToCart(product.id)}
                 ></CardProduct.Footer>
               </CardProduct>
             ))}
