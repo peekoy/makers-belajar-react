@@ -47,8 +47,6 @@ const cartReducer = (state, action) => {
             ...state,
             cart: [],
           };
-          // localStorage.removeItem('cart');
-          // setCart([]);
         }
       }
     }
