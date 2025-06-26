@@ -1,26 +1,23 @@
 import InputForm from '../Elements/Input';
 import Button from '../Elements/Button';
-import { useState, useEffect, useRef } from 'react';
-import { login } from '../../services/auth.service';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const FormLogin = () => {
   const [loginFailed, setLoginFailed] = useState('');
+  const { login, isLoggedIn } = useContext(AuthContext);
 
   const handleLogin = (event) => {
     event.preventDefault();
-    // localStorage.setItem('username', event.target.email.value);
-    // localStorage.setItem('password', event.target.password.value);
-    // console.log('login');
     const data = {
       username: event.target.username.value,
       password: event.target.password.value,
     };
     login(data, (status, res) => {
       if (status) {
-        localStorage.setItem('token', res);
         window.location.href = '/products';
       } else {
-        setLoginFailed(res.response.data);
+        setLoginFailed(res.response?.data || 'Login failed');
       }
     });
   };
@@ -29,7 +26,13 @@ const FormLogin = () => {
 
   useEffect(() => {
     usernameRef.current.focus();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      window.location.href = '/products';
+    }
+  }, [isLoggedIn]);
 
   return (
     <form onSubmit={handleLogin}>
