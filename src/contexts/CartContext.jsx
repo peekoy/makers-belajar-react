@@ -3,7 +3,7 @@ import { createContext, useEffect, useReducer } from 'react';
 export const CartContext = createContext();
 
 const cartReducer = (state, action) => {
-  const { id } = action.payload;
+  const id = action.payload?.id;
   switch (action.type) {
     case 'ADD_CART': {
       if (state.cart.find((item) => item.id === id)) {
