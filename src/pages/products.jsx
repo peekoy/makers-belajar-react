@@ -1,23 +1,25 @@
 import Button from '../components/Elements/Button';
 import CardProduct from '../components/Fragments/CardProduct';
-import { useEffect, useRef, useState, useContext, useCallback } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from 'react';
 import { getProducts } from '../services/product.service';
 import { AuthContext } from '../contexts/AuthContext';
 import { CartContext } from '../contexts/cartContext';
 import withAuth from '../hocs/withAuth';
 
 const ProductsPage = () => {
-  const [totalPrice, setTotalPrice] = useState(0);
+  // const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
   const { user, logout } = useContext(AuthContext);
   const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
     useContext(CartContext);
-
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     window.location.href = '/login';
-  //   }
-  // }, [isLoggedIn]);
+  const [dummy, setDummy] = useState(0);
 
   useEffect(() => {
     getProducts((data) => {
@@ -25,16 +27,27 @@ const ProductsPage = () => {
     });
   }, []);
 
-  useEffect(() => {
+  const totalPrice = useMemo(() => {
+    console.log('%cCalculating total price...', 'color: orange');
     if (products.length > 0 && cart.length > 0) {
-      const sum = cart.reduce((acc, item) => {
+      return cart.reduce((acc, item) => {
         const product = products.find((product) => product.id === item.id);
         return acc + product.price * item.qty;
       }, 0);
-      setTotalPrice(sum);
-      localStorage.setItem('cart', JSON.stringify(cart));
     }
+    return 0;
   }, [cart, products]);
+
+  // useEffect(() => {
+  //   if (products.length > 0 && cart.length > 0) {
+  //     const sum = cart.reduce((acc, item) => {
+  //       const product = products.find((product) => product.id === item.id);
+  //       return acc + product.price * item.qty;
+  //     }, 0);
+  //     setTotalPrice(sum);
+  //     localStorage.setItem('cart', JSON.stringify(cart));
+  //   }
+  // }, [cart, products]);
 
   // ref
   const totalPriceRef = useRef(null);
@@ -81,17 +94,11 @@ const ProductsPage = () => {
         <div className='w-4/6 flex flex-wrap'>
           {products.length > 0 &&
             products.map((product) => (
-              <CardProduct key={product.id}>
-                <CardProduct.Header image={product.image}></CardProduct.Header>
-                <CardProduct.Body name={product.title}>
-                  {product.description}
-                </CardProduct.Body>
-                <CardProduct.Footer
-                  price={product.price}
-                  id={product.id}
-                  handleAddToCart={() => addToCartHandler(product.id)}
-                ></CardProduct.Footer>
-              </CardProduct>
+              <CardProduct
+                key={product.id}
+                product={product}
+                handleAddToCart={addToCartHandler}
+              />
             ))}
         </div>
         <div className='w-2/6'>
