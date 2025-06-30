@@ -3,20 +3,21 @@ import CardProduct from '../components/Fragments/CardProduct';
 import { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import { getProducts } from '../services/product.service';
 import { AuthContext } from '../contexts/AuthContext';
-
 import { CartContext } from '../contexts/cartContext';
+import withAuth from '../hocs/withAuth';
+
 const ProductsPage = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
-  const { user, logout, isLoggedIn } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
     useContext(CartContext);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      window.location.href = '/login';
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     window.location.href = '/login';
+  //   }
+  // }, [isLoggedIn]);
 
   useEffect(() => {
     getProducts((data) => {
@@ -180,4 +181,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default withAuth(ProductsPage);
