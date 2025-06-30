@@ -1,26 +1,29 @@
 import InputForm from '../Elements/Input';
 import Button from '../Elements/Button';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 
 const FormLogin = () => {
   const [loginFailed, setLoginFailed] = useState('');
   const { login, isLoggedIn } = useContext(AuthContext);
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    const data = {
-      username: event.target.username.value,
-      password: event.target.password.value,
-    };
-    login(data, (status, res) => {
-      if (status) {
-        window.location.href = '/products';
-      } else {
-        setLoginFailed(res.response?.data || 'Login failed');
-      }
-    });
-  };
+  const handleLogin = useCallback(
+    (event) => {
+      event.preventDefault();
+      const data = {
+        username: event.target.username.value,
+        password: event.target.password.value,
+      };
+      login(data, (status, res) => {
+        if (status) {
+          window.location.href = '/products';
+        } else {
+          setLoginFailed(res.response?.data || 'Login failed');
+        }
+      });
+    },
+    [login, setLoginFailed]
+  );
 
   const usernameRef = useRef(null);
 

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from 'react';
+import { createContext, useEffect, useReducer, useCallback } from 'react';
 
 export const CartContext = createContext();
 
@@ -73,17 +73,23 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(state.cart));
   }, [state.cart]);
 
-  const handleAddToCart = (id) => {
-    dispatch({ type: 'ADD_CART', payload: { id } });
-  };
+  const handleAddToCart = useCallback(
+    (id) => {
+      dispatch({ type: 'ADD_CART', payload: { id } });
+    },
+    [dispatch]
+  );
 
-  const handleDeleteSingleCart = (id) => {
-    dispatch({ type: 'DELETE_SINGLE_CART', payload: { id } });
-  };
+  const handleDeleteSingleCart = useCallback(
+    (id) => {
+      dispatch({ type: 'DELETE_SINGLE_CART', payload: { id } });
+    },
+    [dispatch]
+  );
 
-  const handleDeleteAllCart = () => {
+  const handleDeleteAllCart = useCallback(() => {
     dispatch({ type: 'DELETE_ALL_CART' });
-  };
+  }, [dispatch]);
 
   const value = {
     cart: state.cart,

@@ -1,9 +1,9 @@
 import Button from '../components/Elements/Button';
 import CardProduct from '../components/Fragments/CardProduct';
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import { getProducts } from '../services/product.service';
 import { AuthContext } from '../contexts/AuthContext';
-import { CartContext } from '../contexts/CartContext';
+import { CartContext } from '../contexts/cartContext';
 
 const ProductsPage = () => {
   const [totalPrice, setTotalPrice] = useState(0);
@@ -35,10 +35,7 @@ const ProductsPage = () => {
     }
   }, [cart, products]);
 
-  const handleLogout = () => {
-    logout();
-  };
-
+  // ref
   const totalPriceRef = useRef(null);
 
   useEffect(() => {
@@ -48,6 +45,28 @@ const ProductsPage = () => {
       totalPriceRef.current.style.display = 'none';
     }
   }, [cart]);
+
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [logout]);
+
+  const addToCartHandler = useCallback(
+    (id) => {
+      handleAddToCart(id);
+    },
+    [handleAddToCart]
+  );
+
+  const deleteSingleCartHandler = useCallback(
+    (id) => {
+      handleDeleteSingleCart(id);
+    },
+    [handleDeleteSingleCart]
+  );
+
+  const deleteAllCartHandler = useCallback(() => {
+    handleDeleteAllCart();
+  }, [handleDeleteAllCart]);
 
   return (
     <>
@@ -69,7 +88,7 @@ const ProductsPage = () => {
                 <CardProduct.Footer
                   price={product.price}
                   id={product.id}
-                  handleAddToCart={() => handleAddToCart(product.id)}
+                  handleAddToCart={() => addToCartHandler(product.id)}
                 ></CardProduct.Footer>
               </CardProduct>
             ))}
@@ -114,7 +133,7 @@ const ProductsPage = () => {
                         <Button
                           classname='bg-red-500'
                           type='button'
-                          onClick={() => handleDeleteSingleCart(item.id)}
+                          onClick={() => deleteSingleCartHandler(item.id)}
                         >
                           -
                         </Button>
@@ -140,7 +159,7 @@ const ProductsPage = () => {
                   <Button
                     classname='bg-red-500'
                     type='button'
-                    onClick={() => handleDeleteAllCart()}
+                    onClick={() => deleteAllCartHandler()}
                   >
                     Clear
                   </Button>
