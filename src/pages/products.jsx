@@ -165,6 +165,13 @@ const ProductsPage = () => {
                   </Button>
                 </td>
               </tr>
+              {cart.length === 0 && (
+                <tr>
+                  <td colSpan={5}>
+                    <p>Cart kosong! Tambahkan produk terlebih dahulu!</p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
