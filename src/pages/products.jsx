@@ -9,23 +9,18 @@ import {
   useMemo,
 } from 'react';
 import { getProducts } from '../services/product.service';
-import { AuthContext } from '../contexts/AuthContext';
-import { CartContext } from '../contexts/cartContext';
+import { useAuth } from '../hooks/useAuth';
+import { useCart } from '../hooks/useCart';
+import { useProducts } from '../hooks/useProduct';
 import withAuth from '../hocs/withAuth';
 
 const ProductsPage = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
-  const [products, setProducts] = useState([]);
-  const { user, logout } = useContext(AuthContext);
+  const totalPriceRef = useRef(null);
+  const products = useProducts();
+  const { user, logout } = useAuth();
   const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
-    useContext(CartContext);
-  const [dummy, setDummy] = useState(0);
-
-  useEffect(() => {
-    getProducts((data) => {
-      setProducts(data);
-    });
-  }, []);
+    useCart();
 
   const totalPrice = useMemo(() => {
     console.log('%cCalculating total price...', 'color: orange');
@@ -50,7 +45,6 @@ const ProductsPage = () => {
   // }, [cart, products]);
 
   // ref
-  const totalPriceRef = useRef(null);
 
   useEffect(() => {
     if (cart.length > 0) {
