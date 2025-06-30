@@ -1,4 +1,6 @@
-const Button = (props) => {
+import React from 'react';
+
+const Button = React.memo((props) => {
   const { children, classname, onClick = () => {}, type = 'button' } = props;
   return (
     <button
@@ -9,6 +11,6 @@ const Button = (props) => {
       {children}
     </button>
   );
-};
+});
 
 export default Button;
