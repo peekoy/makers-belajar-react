@@ -3,8 +3,8 @@ import CardProduct from '../components/Fragments/CardProduct';
 import { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import { getProducts } from '../services/product.service';
 import { AuthContext } from '../contexts/AuthContext';
-import { CartContext } from '../contexts/cartContext';
 
+import { CartContext } from '../contexts/cartContext';
 const ProductsPage = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
