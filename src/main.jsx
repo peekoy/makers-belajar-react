@@ -14,6 +14,7 @@ const LoginPage = lazy(() => import('./pages/login.jsx'));
 const RegisterPage = lazy(() => import('./pages/register.jsx'));
 const ProductsPage = lazy(() => import('./pages/products.jsx'));
 const ErrorPage = lazy(() => import('./pages/404.jsx'));
+const DetailProductPage = lazy(() => import('./pages/detailProduct.jsx'));
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: '/404',
     element: <ErrorPage />,
+  },
+  {
+    path: '/product/:id',
+    element: <DetailProductPage />,
   },
 ]);
 
