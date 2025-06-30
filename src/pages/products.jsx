@@ -8,7 +8,6 @@ import {
   useCallback,
   useMemo,
 } from 'react';
-import { getProducts } from '../services/product.service';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProduct';
@@ -22,6 +21,17 @@ const ProductsPage = () => {
   const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
     useCart();
 
+  // const totalPrice = () => {
+  //   console.log('%cCalculating total price...', 'color: orange');
+  //   if (products.length > 0 && cart.length > 0) {
+  //     return cart.reduce((acc, item) => {
+  //       const product = products.find((product) => product.id === item.id);
+  //       return acc + product.price * item.qty;
+  //     }, 0);
+  //   }
+  //   return 0;
+  // };
+
   const totalPrice = useMemo(() => {
     console.log('%cCalculating total price...', 'color: orange');
     if (products.length > 0 && cart.length > 0) {
@@ -34,6 +44,7 @@ const ProductsPage = () => {
   }, [cart, products]);
 
   // useEffect(() => {
+  //   console.log('%cCalculating total price...', 'color: orange');
   //   if (products.length > 0 && cart.length > 0) {
   //     const sum = cart.reduce((acc, item) => {
   //       const product = products.find((product) => product.id === item.id);
@@ -60,6 +71,7 @@ const ProductsPage = () => {
 
   const addToCartHandler = useCallback(
     (id) => {
+      console.log('add cart suscces');
       handleAddToCart(id);
     },
     [handleAddToCart]
