@@ -1,14 +1,18 @@
-import { legacy_createStore } from 'redux';
-import cartReducer from './reducer';
+import { legacy_createStore, applyMiddleware, compose } from 'redux';
+import { thunk } from 'redux-thunk';
+import rootReducer from './rootReducer';
+
+const componseEnhancers =
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = legacy_createStore(
-  cartReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  rootReducer,
+  componseEnhancers(applyMiddleware(thunk))
 );
 
-store.subscribe(() => {
-  const state = store.getState();
-  localStorage.setItem('cart', JSON.stringify(state.cart));
-});
+// store.subscribe(() => {
+//   const state = store.getState();
+//   localStorage.setItem('cart', JSON.stringify(state.cart));
+// });
 
 export default store;

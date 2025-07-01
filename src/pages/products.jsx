@@ -12,18 +12,23 @@ import { useAuth } from '../hooks/useAuth';
 // import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProduct';
 import withAuth from '../hocs/withAuth';
+import { logout } from '../redux/auth/actions';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, deleteSingleCart, deleteAllCart } from '../redux/actions';
+import {
+  addToCart,
+  deleteSingleCart,
+  deleteAllCart,
+} from '../redux/cart/actions';
 
 const ProductsPage = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
   const totalPriceRef = useRef(null);
   const products = useProducts();
-  const { user, logout } = useAuth();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   // const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
   //   useCart();
   const cart = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
 
   // const totalPrice = () => {
   //   console.log('%cCalculating total price...', 'color: orange');
@@ -70,8 +75,8 @@ const ProductsPage = () => {
   }, [cart]);
 
   const handleLogout = useCallback(() => {
-    logout();
-  }, [logout]);
+    dispatch(logout());
+  }, [dispatch]);
 
   const addToCartHandler = useCallback(
     (id) => {
