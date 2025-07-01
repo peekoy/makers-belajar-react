@@ -1,5 +1,16 @@
-import { use } from 'react';
+import { getUsername } from '../../services/auth.service';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from './types';
+
+const token = localStorage.getItem('token');
+let user = null;
+if (token) {
+  try {
+    const username = getUsername(token);
+    user = { username };
+  } catch (e) {
+    localStorage.removeItem('token');
+  }
+}
 
 const initialState = {
   user: null,

@@ -1,26 +1,32 @@
-import { login as loginService } from '../../services/auth.service';
+import {
+  login as loginService,
+  getUsername,
+} from '../../services/auth.service';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from './types';
 
-export const login = (data, callback) => async (dispatch) => {
+export const login = (data) => async (dispatch) => {
   dispatch({ type: LOGIN_REQUEST });
 
   try {
     const token = await loginService(data);
     localStorage.setItem('token', token);
+    const username = getUsername(token);
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: { username: data.username },
+      payload: { username },
     });
-    callback(true);
   } catch (error) {
+    const errorMessage = error.response
+      ? error.response.data
+      : 'Invalid credentials';
     dispatch({
       type: LOGIN_FAILURE,
-      payload: error.message,
+      payload: errorMessage,
     });
-    callback(false, error.message);
   }
 };
 
-export const logout = () => ({
-  type: LOGOUT,
-});
+export const logout = () => (dispatch) => {
+  localStorage.removeItem('token');
+  dispatch({ type: LOGOUT });
+};

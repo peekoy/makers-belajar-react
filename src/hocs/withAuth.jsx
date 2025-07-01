@@ -1,19 +1,20 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import { useSelector } from 'react-redux';
 
 const withAuth = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
     useEffect(() => {
-      if (!isLoggedIn) {
+      if (!user) {
         navigate('/login');
       }
-    }, [isLoggedIn, navigate]);
+    }, [user, navigate]);
 
-    if (!isLoggedIn) {
+    if (!user) {
       return null;
     }
 

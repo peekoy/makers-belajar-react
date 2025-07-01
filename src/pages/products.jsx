@@ -8,7 +8,7 @@ import {
   useCallback,
   useMemo,
 } from 'react';
-import { useAuth } from '../hooks/useAuth';
+// import { useAuth } from '../hooks/useAuth';
 // import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProduct';
 import withAuth from '../hocs/withAuth';
@@ -19,12 +19,14 @@ import {
   deleteSingleCart,
   deleteAllCart,
 } from '../redux/cart/actions';
+import { useNavigate } from 'react-router-dom';
 
 const ProductsPage = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
-  const totalPriceRef = useRef(null);
+  const navigate = useNavigate();
   const products = useProducts();
   const dispatch = useDispatch();
+  const totalPriceRef = useRef(null);
   const { user } = useSelector((state) => state.auth);
   // const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
   //   useCart();
@@ -76,7 +78,8 @@ const ProductsPage = () => {
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
-  }, [dispatch]);
+    navigate('/login');
+  }, [dispatch, navigate]);
 
   const addToCartHandler = useCallback(
     (id) => {

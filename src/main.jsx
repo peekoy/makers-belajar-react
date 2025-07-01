@@ -53,19 +53,19 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <AuthProvider>
-        <Suspense
-          fallback={
-            <div className='flex justify-center items-center h-dvh '>
-              <p className='text-xl text-center'>
-                Loading page... <br /> Please wait a moment.
-              </p>
-            </div>
-          }
-        >
-          <RouterProvider router={router} />
-        </Suspense>
-      </AuthProvider>
+      {/* <AuthProvider> */}
+      <Suspense
+        fallback={
+          <div className='flex justify-center items-center h-dvh '>
+            <p className='text-xl text-center'>
+              Loading page... <br /> Please wait a moment.
+            </p>
+          </div>
+        }
+      >
+        <RouterProvider router={router} />
+      </Suspense>
+      {/* </AuthProvider> */}
     </Provider>
   </StrictMode>
 );
