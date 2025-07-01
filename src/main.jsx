@@ -7,8 +7,10 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext.jsx';
-import { CartProvider } from './contexts/cartContext.jsx';
+// import { CartProvider } from './contexts/cartContext.jsx';
 import ErrorBoundary from './components/Fragments/ErrorBoundary.jsx';
+import { Provider } from 'react-redux';
+import store from './redux/store.js';
 
 const LoginPage = lazy(() => import('./pages/login.jsx'));
 const RegisterPage = lazy(() => import('./pages/register.jsx'));
@@ -50,8 +52,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <CartProvider>
+    <Provider store={store}>
+      <AuthProvider>
         <Suspense
           fallback={
             <div className='flex justify-center items-center h-dvh '>
@@ -63,7 +65,7 @@ createRoot(document.getElementById('root')).render(
         >
           <RouterProvider router={router} />
         </Suspense>
-      </CartProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </Provider>
   </StrictMode>
 );
