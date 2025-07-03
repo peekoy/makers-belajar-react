@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FormLogin from '../components/Fragments/FormLogin';
 import Button from '../components/Elements/Button';
-import { login } from '../redux/auth/actions';
+// import { login } from '../redux/auth/actions';
+import { loginUser } from '../redux/auth/authSlice';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, user } = useSelector((state) => state.auth);
+  const { user, loading, error } = useSelector((state) => state.auth);
   const usernameRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +28,8 @@ const LoginPage = () => {
       username: event.target.username.value,
       password: event.target.password.value,
     };
-    dispatch(login(data));
+    console.log('tes', data.username);
+    dispatch(loginUser(data));
   };
 
   return (

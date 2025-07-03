@@ -1,25 +1,30 @@
+import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Elements/Button';
 import CardProduct from '../components/Fragments/CardProduct';
-import {
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  useCallback,
-  useMemo,
-} from 'react';
-// import { useAuth } from '../hooks/useAuth';
-// import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProduct';
 import withAuth from '../hocs/withAuth';
-import { logout } from '../redux/auth/actions';
+
+// context reducer bawaan
+// import { useAuth } from '../hooks/useAuth';
+// import { useCart } from '../hooks/useCart';
+
+// redux core concept
+// import { logout } from '../redux/auth/actions';
 import { useSelector, useDispatch } from 'react-redux';
+// import {
+//   addToCart,
+//   deleteSingleCart,
+//   deleteAllCart,
+// } from '../redux/cart/actions';
+
+// redux toolkit
+import { logout } from '../redux/auth/authSlice';
 import {
   addToCart,
   deleteSingleCart,
   deleteAllCart,
-} from '../redux/cart/actions';
-import { useNavigate } from 'react-router-dom';
+} from '../redux/cart/cartSlice';
 
 const ProductsPage = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
@@ -31,17 +36,6 @@ const ProductsPage = () => {
   // const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
   //   useCart();
   const cart = useSelector((state) => state.cart);
-
-  // const totalPrice = () => {
-  //   console.log('%cCalculating total price...', 'color: orange');
-  //   if (products.length > 0 && cart.length > 0) {
-  //     return cart.reduce((acc, item) => {
-  //       const product = products.find((product) => product.id === item.id);
-  //       return acc + product.price * item.qty;
-  //     }, 0);
-  //   }
-  //   return 0;
-  // };
 
   const totalPrice = useMemo(() => {
     console.log('%cCalculating total price...', 'color: orange');
@@ -84,14 +78,14 @@ const ProductsPage = () => {
   const addToCartHandler = useCallback(
     (id) => {
       console.log('add cart suscces');
-      dispatch(addToCart(id));
+      dispatch(addToCart({ id }));
     },
     [dispatch]
   );
 
   const deleteSingleCartHandler = useCallback(
     (id) => {
-      dispatch(deleteSingleCart(id));
+      dispatch(deleteSingleCart({ id }));
     },
     [dispatch]
   );
@@ -206,4 +200,4 @@ const ProductsPage = () => {
   );
 };
 
-export default withAuth(ProductsPage);
+export default ProductsPage;

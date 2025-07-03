@@ -1,11 +1,11 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 
 const withAuth = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
     const { user } = useSelector((state) => state.auth);
+    console.log('user', user);
     const navigate = useNavigate();
 
     useEffect(() => {

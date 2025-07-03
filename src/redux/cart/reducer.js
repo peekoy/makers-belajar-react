@@ -1,5 +1,3 @@
-// src/redux/cart/reducer.js (Versi Refactor)
-
 import { ADD_TO_CART, DELETE_ALL_CART, DELETE_SINGLE_CART } from './types';
 
 const saveCart = (cart) => {
