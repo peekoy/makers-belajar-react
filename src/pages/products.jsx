@@ -4,6 +4,7 @@ import Button from '../components/Elements/Button';
 import CardProduct from '../components/Fragments/CardProduct';
 import { useProducts } from '../hooks/useProduct';
 import withAuth from '../hocs/withAuth';
+import { useSelector, useDispatch } from 'react-redux';
 
 // context reducer bawaan
 // import { useAuth } from '../hooks/useAuth';
@@ -11,7 +12,6 @@ import withAuth from '../hocs/withAuth';
 
 // redux core concept
 // import { logout } from '../redux/auth/actions';
-import { useSelector, useDispatch } from 'react-redux';
 // import {
 //   addToCart,
 //   deleteSingleCart,
@@ -20,11 +20,14 @@ import { useSelector, useDispatch } from 'react-redux';
 
 // redux toolkit
 import { logout } from '../redux/auth/authSlice';
-import {
-  addToCart,
-  deleteSingleCart,
-  deleteAllCart,
-} from '../redux/cart/cartSlice';
+// import {
+//   addToCart,
+//   deleteSingleCart,
+//   deleteAllCart,
+// } from '../redux/cart/cartSlice';
+
+// zustand
+import { useCartStore } from '../zustand/cartStore';
 
 const ProductsPage = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
@@ -35,7 +38,8 @@ const ProductsPage = () => {
   const { user } = useSelector((state) => state.auth);
   // const { cart, handleAddToCart, handleDeleteSingleCart, handleDeleteAllCart } =
   //   useCart();
-  const cart = useSelector((state) => state.cart);
+  // const cart = useSelector((state) => state.cart);
+  const { cart, addToCart, deleteSingleCart, deleteAllCart } = useCartStore();
 
   const totalPrice = useMemo(() => {
     console.log('%cCalculating total price...', 'color: orange');
@@ -78,21 +82,24 @@ const ProductsPage = () => {
   const addToCartHandler = useCallback(
     (id) => {
       console.log('add cart suscces');
-      dispatch(addToCart({ id }));
+      // dispatch(addToCart({ id }));
+      addToCart(id);
     },
-    [dispatch]
+    [addToCart]
   );
 
   const deleteSingleCartHandler = useCallback(
     (id) => {
-      dispatch(deleteSingleCart({ id }));
+      // dispatch(deleteSingleCart({ id }));
+      deleteSingleCart(id);
     },
-    [dispatch]
+    [deleteSingleCart]
   );
 
   const deleteAllCartHandler = useCallback(() => {
-    dispatch(deleteAllCart());
-  }, [dispatch]);
+    // dispatch(deleteAllCart());
+    deleteAllCart();
+  }, [deleteAllCart]);
 
   return (
     <>
@@ -200,4 +207,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default withAuth(ProductsPage);
