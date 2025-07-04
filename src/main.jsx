@@ -6,17 +6,21 @@ import {
   RouterProvider,
   Navigate,
 } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext.jsx';
+// import { AuthProvider } from './contexts/AuthContext.jsx';
 // import { CartProvider } from './contexts/cartContext.jsx';
 import ErrorBoundary from './components/Fragments/ErrorBoundary.jsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const LoginPage = lazy(() => import('./pages/login.jsx'));
 const RegisterPage = lazy(() => import('./pages/register.jsx'));
 const ProductsPage = lazy(() => import('./pages/products.jsx'));
 const ErrorPage = lazy(() => import('./pages/404.jsx'));
 const DetailProductPage = lazy(() => import('./pages/detailProduct.jsx'));
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -53,19 +57,20 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      {/* <AuthProvider> */}
-      <Suspense
-        fallback={
-          <div className='flex justify-center items-center h-dvh '>
-            <p className='text-xl text-center'>
-              Loading page... <br /> Please wait a moment.
-            </p>
-          </div>
-        }
-      >
-        <RouterProvider router={router} />
-      </Suspense>
-      {/* </AuthProvider> */}
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <Suspense
+          fallback={
+            <div className='flex justify-center items-center h-dvh '>
+              <p className='text-xl text-center'>
+                Loading page... <br /> Please wait a moment.
+              </p>
+            </div>
+          }
+        >
+          <RouterProvider router={router} />
+        </Suspense>
+      </QueryClientProvider>
     </Provider>
   </StrictMode>
 );

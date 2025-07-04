@@ -32,7 +32,8 @@ import { useCartStore } from '../zustand/cartStore';
 const ProductsPage = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
-  const products = useProducts();
+  // const products = useProducts();
+  const { data: products, isLoading, isError, error } = useProducts();
   const dispatch = useDispatch();
   const totalPriceRef = useRef(null);
   const { user } = useSelector((state) => state.auth);
@@ -43,7 +44,7 @@ const ProductsPage = () => {
 
   const totalPrice = useMemo(() => {
     console.log('%cCalculating total price...', 'color: orange');
-    if (products.length > 0 && cart.length > 0) {
+    if (products && cart.length > 0) {
       return cart.reduce((acc, item) => {
         const product = products.find((product) => product.id === item.id);
         return acc + product.price * item.qty;
@@ -67,12 +68,14 @@ const ProductsPage = () => {
   // ref
 
   useEffect(() => {
-    if (cart.length > 0) {
-      totalPriceRef.current.style.display = 'table-row';
-    } else {
-      totalPriceRef.current.style.display = 'none';
+    if (totalPriceRef.current) {
+      if (cart.length > 0) {
+        totalPriceRef.current.style.display = 'table-row';
+      } else {
+        totalPriceRef.current.style.display = 'none';
+      }
     }
-  }, [cart]);
+  }, [cart, products]);
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
@@ -101,6 +104,22 @@ const ProductsPage = () => {
     deleteAllCart();
   }, [deleteAllCart]);
 
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center h-dvh'>
+        <p className='text-xl'>Loading products...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className='flex justify-center items-center h-dvh'>
+        <p className='text-xl text-red-500'>Error: {error.message}</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className='flex justify-end h-20 bg-blue-600 text-white items-center px-10'>
@@ -111,7 +130,7 @@ const ProductsPage = () => {
       </div>
       <div className='flex justify-center py-5'>
         <div className='w-4/6 flex flex-wrap'>
-          {products.length > 0 &&
+          {products &&
             products.map((product) => (
               <CardProduct
                 key={product.id}
